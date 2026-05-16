@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:radial-gradient(circle at top,#241133,#09000f);
+    overflow:hidden;
+    font-family:'Georgia', serif;
+    color:white;
+}
+
+/* ================================================= */
+/* ================= PLAYER MINI =================== */
+/* ================================================= */
+
+.player{
+    position:fixed;
+    top:15px;
+    left:15px;
+    z-index:100;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    gap:8px;
+}
+
+/* ===== GLOW ===== */
+
+.glow{
+    position:absolute;
+    width:90px;
+    height:90px;
+    background:radial-gradient(circle,#c084fc44,transparent 70%);
+    border-radius:50%;
+    filter:blur(15px);
+    animation:pulseGlow 2.5s infinite;
+}
+
+@keyframes pulseGlow{
+
+    0%,100%{
+        transform:scale(1);
+        opacity:.6;
+    }
+
+    50%{
+        transform:scale(1.08);
+        opacity:1;
+    }
+}
+
+/* ===== VINILO ===== */
+
+.vinyl-container{
+    width:70px;
+    height:70px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.vinyl{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+
+    background:
+    repeating-radial-gradient(
+        circle,
+        #111 0px,
+        #111 3px,
+        #1f1f1f 4px,
+        #000 7px
+    );
+
+    box-shadow:
+    0 0 18px rgba(192,132,252,.45),
+    inset 0 0 12px rgba(255,255,255,.08);
+
+    position:relative;
+}
+
+/* ===== CENTRO ===== */
+
+.center-disc{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:#a855f7;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:12px;
+    color:white;
+
+    box-shadow:0 0 10px rgba(192,132,252,.8);
+}
+
+/* ===== SPIN ===== */
+
+.spin{
+    animation:spin 2s linear infinite;
+}
+
+@keyframes spin{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+
+/* ===== ONDAS ===== */
+
+.equalizer{
+    display:flex;
+    align-items:flex-end;
+    gap:4px;
+    height:18px;
+}
+
+.equalizer span{
+    width:4px;
+    height:8px;
+    background:#c084fc;
+    border-radius:10px;
+
+    box-shadow:0 0 8px #c084fc;
+
+    animation:wave 1s ease-in-out infinite;
+}
+
+.equalizer span:nth-child(1){
+    animation-delay:0s;
+}
+
+.equalizer span:nth-child(2){
+    animation-delay:.2s;
+}
+
+.equalizer span:nth-child(3){
+    animation-delay:.4s;
+}
+
+@keyframes wave{
+
+    0%,100%{
+        height:6px;
+    }
+
+    50%{
+        height:18px;
+    }
+}
+
+/* ===== BOTÓN ===== */
+
+.btn{
+    width:34px;
+    height:34px;
+
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.12);
+
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(10px);
+
+    color:white;
+    cursor:pointer;
+
+    transition:.3s;
+
+    box-shadow:0 0 12px rgba(192,132,252,.25);
+}
+
+.btn:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 18px rgba(192,132,252,.5);
+}
+
+/* ================================================= */
+/* ==================== CARTA ====================== */
+/* ================================================= */
+
+.container{
+    position:relative;
+    width:90vw;
+    max-width:500px;
+    height:260px;
+    cursor:pointer;
+    z-index:10;
+}
+
+.envelope{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:#2a163f;
+    border-radius:16px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.8);
+    transition:all 1.5s ease;
+    overflow:hidden;
+}
+
+.flap{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:#3d1f5c;
+    clip-path:polygon(0 0,50% 60%,100% 0,100% 0,0 0);
+    transform-origin:top;
+    transition:transform 1.2s ease;
+}
+
+/* ===== LETRA K ===== */
+
+.heart{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:75px;
+    height:75px;
+    border-radius:50%;
+    background:rgba(180,120,255,.15);
+    border:2px solid #c084fc;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    animation:pulse 1.8s infinite;
+    box-shadow:0 0 25px rgba(192,132,252,.6);
+}
+
+.heart span{
+    font-size:38px;
+    color:#e9d5ff;
+}
+
+/* ===== CARTA ===== */
+
+.letter{
+    position:absolute;
+    width:100%;
+    height:520px;
+    overflow-y:auto;
+    background:linear-gradient(180deg,#32164d,#1b0d2b);
+    border-radius:20px;
+    padding:35px;
+    text-align:center;
+    box-shadow:0 0 40px rgba(192,132,252,.25);
+
+    transform:translateY(120px);
+
+    opacity:0;
+    transition:all 1.6s ease;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.letter::-webkit-scrollbar{
+    width:6px;
+}
+
+.letter::-webkit-scrollbar-thumb{
+    background:#c084fc;
+    border-radius:10px;
+}
+
+.name{
+    font-size:32px;
+    color:#d8b4fe;
+    opacity:0;
+    transform:translateY(-10px);
+    transition:1.2s;
+    text-shadow:0 0 15px rgba(216,180,254,.8);
+}
+
+.open .name{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.letter p{
+    margin-top:25px;
+    font-size:16px;
+    line-height:2;
+    color:#f3e8ff;
+}
+
+/* ===== ABRIR ===== */
+
+.open .flap{
+    transform:rotateX(180deg);
+}
+
+.open .envelope{
+    transform:translateY(240px);
+    opacity:0;
+}
+
+.open .letter{
+    transform:translateY(-140px);
+    opacity:1;
+}
+
+/* ===== PULSO ===== */
+
+@keyframes pulse{
+
+    0%,100%{
+        transform:translate(-50%,-50%) scale(1);
+    }
+
+    50%{
+        transform:translate(-50%,-50%) scale(1.1);
+    }
+}
+
+/* ================================================= */
+/* ================= CORAZONES ===================== */
+/* ================================================= */
+
+.floating-heart{
+    position:fixed;
+    color:#c084fc;
+    pointer-events:none;
+    animation:floatUp linear forwards;
+    text-shadow:0 0 15px #c084fc;
+    z-index:1;
+}
+
+@keyframes floatUp{
+
+    0%{
+        transform:
+        translate(0,0)
+        rotate(0deg)
+        scale(0.7);
+
+        opacity:0;
+    }
+
+    10%{
+        opacity:1;
+    }
+
+    100%{
+        transform:
+        translate(var(--x), -120vh)
+        rotate(var(--rotate))
+        scale(1.5);
+
+        opacity:0;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+
+<audio id="musica1" loop src="mi mujer.mp3"></audio>
+
+<!-- PLAYER -->
+
+<div class="player">
+
+    <div class="glow"></div>
+
+    <div class="vinyl-container">
+
+        <div class="vinyl" id="vinyl">
+
+            <!-- CORAZÓN MORADO -->
+            <div class="center-disc">
+                💜
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ONDAS -->
+
+    <div class="equalizer">
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </div>
+
+    <!-- BOTÓN -->
+
+    <button class="btn" id="btnMusic">
+        ▶
+    </button>
+
+</div>
+
+<!-- CARTA -->
+
+<div class="container" onclick="abrirCarta()">
+
+    <div class="envelope">
+
+        <div class="flap"></div>
+
+        <div class="heart">
+            <span>💜</span>
+        </div>
+
+    </div>
+
+    <div class="letter">
+
+        <div class="name">💜</div>
+
+        <p>
+            No sé cómo explicarlo, pero cada día logras enamorarme más de una manera distinta. 💜<br><br>
+
+            A veces pienso que llegaste a mi vida para cambiarlo todo, porque desde que estás aquí nada se siente igual… todo tiene más sentido cuando estoy contigo.<br><br>
+
+            Quiero que sepas que no importa lo que pase, ni los problemas, ni los días difíciles, yo quiero seguir contigo y seguir eligiéndote siempre.<br><br>
+
+            Te amo muchísimo, más de lo que las palabras pueden explicar, y mientras tú me lo permitas, quiero quedarme a tu lado, haciendo recuerdos contigo y amándote cada día más.<br><br>
+
+            Porque sinceramente, no imagino a alguien capaz de hacerme sentir todo lo que tú haces sentir en mí. 💜
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+
+const musica1 = document.getElementById("musica1");
+const vinyl = document.getElementById("vinyl");
+const btn = document.getElementById("btnMusic");
+
+let abierta = false;
+
+/* ================================================= */
+/* ================= ABRIR CARTA =================== */
+/* ================================================= */
+
+function abrirCarta(){
+
+    document.querySelector(".container").classList.add("open");
+
+    if(!abierta){
+
+        musica1.play();
+
+        activarPlay();
+
+        corazones();
+
+        abierta = true;
+    }
+}
+
+/* ================================================= */
+/* ================= BOTÓN PLAY ==================== */
+/* ================================================= */
+
+btn.addEventListener("click",(e)=>{
+
+    e.stopPropagation();
+
+    if(musica1.paused){
+
+        musica1.play();
+
+    }else{
+
+        musica1.pause();
+    }
+});
+
+/* ================================================= */
+/* ================= ACTIVAR ======================= */
+/* ================================================= */
+
+function activarPlay(){
+
+    vinyl.classList.add("spin");
+
+    btn.innerHTML = "⏸";
+}
+
+/* ================================================= */
+/* ================= DESACTIVAR ==================== */
+/* ================================================= */
+
+function desactivarPlay(){
+
+    vinyl.classList.remove("spin");
+
+    btn.innerHTML = "▶";
+}
+
+/* ================================================= */
+/* ================= EVENTOS AUDIO ================= */
+/* ================================================= */
+
+musica1.addEventListener("play",()=>{
+
+    activarPlay();
+
+});
+
+musica1.addEventListener("pause",()=>{
+
+    desactivarPlay();
+
+});
+
+/* ================================================= */
+/* ================= CORAZONES ===================== */
+/* ================================================= */
+
+function corazones(){
+
+    setInterval(()=>{
+
+        const h = document.createElement("div");
+
+        h.className = "floating-heart";
+
+        h.innerHTML = "💜";
+
+        h.style.left =
+        Math.random() * window.innerWidth + "px";
+
+        h.style.top =
+        window.innerHeight + "px";
+
+        h.style.fontSize =
+        (15 + Math.random()*40) + "px";
+
+        const xMove =
+        (Math.random() * 600) - 300;
+
+        const rotate =
+        (Math.random() * 360) - 180;
+
+        const duration =
+        4 + Math.random()*4;
+
+        h.style.setProperty('--x', xMove + 'px');
+
+        h.style.setProperty('--rotate', rotate + 'deg');
+
+        h.style.animationDuration =
+        duration + "s";
+
+        document.body.appendChild(h);
+
+        setTimeout(()=>{
+            h.remove();
+        },8000);
+
+    },120);
+}
+
+</script>
+
+</body>
+</html>
